@@ -1,0 +1,11 @@
+# Binaries files
+*.exe
+*.dll
+
+# Test files
+*.test
+
+# Other files 
+.idea/
+vendor/
+.vscode/
