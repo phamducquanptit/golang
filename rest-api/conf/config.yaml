@@ -1,0 +1,13 @@
+runmode: debug                # mode: debug, release, test
+addr: :3001                   
+name: rest-api           
+url: http://127.0.0.1:3001
+max_ping_count: 10
+jwt_secret: quanphamptit
+jwt_exp: 1         
+
+db:
+  name: db_todo
+  addr: 127.0.0.1:3306
+  username: root
+  password: root@123

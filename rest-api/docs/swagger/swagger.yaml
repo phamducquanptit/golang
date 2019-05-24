@@ -1,0 +1,309 @@
+basePath: /api/v1
+definitions:
+  models.TodoInfo:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      status:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.TodoModel:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      status:
+        type: integer
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  todo.CreateRequest:
+    properties:
+      title:
+        type: string
+    type: object
+  todo.DataResponse:
+    properties:
+      todos:
+        $ref: '#/definitions/models.TodoModel'
+        type: object
+    type: object
+  todo.ListRequest:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
+  todo.SwaggerListResponse:
+    properties:
+      todos:
+        items:
+          $ref: '#/definitions/models.TodoInfo'
+        type: array
+      total:
+        type: integer
+    type: object
+  todo.UpdateRequest:
+    properties:
+      status:
+        type: integer
+      title:
+        type: string
+    type: object
+  user.CreateRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  user.CreateResponse:
+    properties:
+      username:
+        type: string
+    type: object
+  user.SwaggerLoginBody:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:3001
+info:
+  contact:
+    email: phamducquanptithcm@gmail.com
+    name: quanpham
+    url: https://www.facebook.com/quanphamptit
+  description: This is rest api demo
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: REST API TO DO LIST
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      description: Login user
+      parameters:
+      - description: 'body: username, password'
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user.SwaggerLoginBody'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"message":"OK","data":{"user": {"id": 1,"created_at":
+            "2019-05-15T16:44:54+07:00","username": "ebisu","password": "$2a$10$UEC866tSde0fZTyRQBTOvOHv9T4qUMgUBhREXkeGWG5s2gHXXWCzm"},
+            "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjgwMTY5MjIsImlkIjowLCJuYmYiOjE1MjgwMTY5MjIsInVzZXJuYW1lIjoiYWRtaW4ifQ.LjxrK9DuAwAzUD8-9v43NzWBN7HXsSLfebw92DKd1JQ"}}'
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Login user
+      tags:
+      - Auth
+  /list:
+    post:
+      consumes:
+      - application/json
+      description: Get list todo
+      parameters:
+      - description: List todos
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/todo.ListRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 0, "message": "OK", "data": { "total": 1,"todos":
+            [{ "id": 1,"title": "learning golang","status": 0,"created_at": "2019-05-15
+            16:57:29","updated_at": "2019-05-15 16:57:29"}] }}'
+          schema:
+            $ref: '#/definitions/todo.SwaggerListResponse'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      security:
+      - OAuth2Application: []
+      summary: Get list todo
+      tags:
+      - Todo
+  /todo:
+    post:
+      consumes:
+      - application/json
+      description: Create a new todo
+      parameters:
+      - description: Create a new todo
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/todo.CreateRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"message":"OK","data": {"todo": {"id": 1,"created_at":
+            "2019-05-15T16:57:29.4549295+07:00","status": 0,"user_id": 1,"title":
+            "learning golang"} } }'
+          schema:
+            $ref: '#/definitions/todo.DataResponse'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      security:
+      - OAuth2Application: []
+      summary: Create a new todo
+      tags:
+      - Todo
+  /todo/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a todo
+      parameters:
+      - description: id todo delete
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 0, "message": "OK", "data": ""}'
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      security:
+      - OAuth2Application: []
+      summary: Delete a todo
+      tags:
+      - Todo
+    put:
+      consumes:
+      - application/json
+      description: Update todo
+      parameters:
+      - description: id todo update
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: data update
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/todo.UpdateRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 0, "message": "OK", "data": "{"todo": {"title": "build
+            rest api todo list demo", "status": 0} }"}'
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      security:
+      - OAuth2Application: []
+      summary: Update todo
+      tags:
+      - Todo
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: Create a new user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user.CreateRequest'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":0,"message":"OK","data":{"user": { "id": 2,"created_at":
+            "2019-05-15T16:54:05.8135074+07:00","username": "quanpham","password":
+            "$2a$10$Kb4PV4dc.jaUnnjTviWMB.DY0JaHdKBRSEegYrWUZhgXHJQ.tkuu6"}}'
+          schema:
+            $ref: '#/definitions/user.CreateResponse'
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Create a new user
+      tags:
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
